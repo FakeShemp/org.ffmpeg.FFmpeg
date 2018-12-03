@@ -12,8 +12,10 @@ This is a Flatpak manifest for FFmpeg built with many advanced features for tran
 | [libfdk-aac](https://github.com/mstorsjo/fdk-aac)                  | 0.1.6      |                          |
 | [libmp3lame](http://lame.sourceforge.net/)                         | 3.100      |                          |
 | [libopus](http://opus-codec.org/)                                  | 1.3        | w/ custom modes          |
+| [libvorbis](https://xiph.org/vorbis/)                              | 1.3.6      |                          |
 | [libass](https://github.com/libass/libass)                         | 0.14.0     | w/ harfbuzz & fontconfig |
 | [libzimg](https://github.com/sekrit-twc/zimg)                      | 2.8        |                          |
+| [opencl](https://www.khronos.org/opencl/)                          | 2.2        |                          |
 | [nvdec/nvenc](https://developer.nvidia.com/nvidia-video-codec-sdk) | 8.2.15     |                          |
 
 To install you need the Flathub repository as a remote
@@ -27,5 +29,3 @@ Then you build and install FFmpeg and its dependencies with
 ```bash
 flatpak-builder --user --force-clean --install builds org.ffmpeg.FFmpeg.yaml
 ```
-
-

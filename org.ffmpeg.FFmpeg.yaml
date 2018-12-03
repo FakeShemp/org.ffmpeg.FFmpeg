@@ -10,9 +10,16 @@ finish-args:
 build-options:
   cflags: -O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2
   cxxflags: -O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2
-  ldflags: -fstack-protector-strong -Wl,-z,relro,-z,now -L/app/lib
+  ldflags: -fstack-protector-strong -Wl,-z,relro,-z,now
   env:
     V: '1'
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /lib/*.a
+  - /lib/*.la
+  - /share/doc
+  - /share/man
 
 modules:
   - name: 'x264'
@@ -25,8 +32,6 @@ modules:
       - type: archive
         url: http://download.videolan.org/x264/snapshots/x264-snapshot-20181119-2245-stable.tar.bz2
         sha256: 359ad1fe388b2d1108789af6bdec54b8e53e340e3e5f078f973dd310bdfc44f6
-    # cleanup:
-    #   - /lib/pkgconfig
 
   - name: 'x265'
     buildsystem: cmake-ninja
@@ -49,9 +54,6 @@ modules:
             sha256: 7c3e819c2bdeb883de68bafe88776a01356f7ef565e75ba866c4b49a087c6bdf
         cleanup:
           - /bin
-        #   - /lib/*.la
-        #   - /share
-        #   - /lib/pkgconfig
     sources:
       - type: archive
         url: https://bitbucket.org/multicoreware/x265/downloads/x265_2.9.tar.gz
@@ -62,8 +64,6 @@ modules:
           - patches/x265-detect512-is-needed-on-all-architectures.patch
     cleanup:
       - /bin
-    #   - /lib/*.a
-    #   - /lib/pkgconfig
 
   - name: libvpx
     config-opts:
@@ -82,14 +82,10 @@ modules:
             md5: fc9e586751ff789b34b1f21d572d96af
         cleanup:
           - /bin
-        #   - /lib/*.a
-        #   - /share
     sources:
       - type: archive
         url: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
         sha256: 1fec931eb5c94279ad219a5b6e0202358e94a93a90cfb1603578c326abfc1238
-    # cleanup:
-    #   - /lib/pkgconfig
 
   - name: fdk-aac
     config-opts:
@@ -103,9 +99,6 @@ modules:
         dest-filename: autogen.sh
         commands:
           - autoreconf -fiv
-    # cleanup:
-    #   - /lib/*.la
-    #   - /lib/pkgconfig
 
   - name: lame
     rm-configure: true
@@ -129,8 +122,6 @@ modules:
         path: patches/lame-msse.patch
     cleanup:
       - /bin
-    #   - /lib/*.la
-    #   - /share
 
   - name: opus
     config-opts:
@@ -146,6 +137,8 @@ modules:
         dest-filename: autogen.sh
         commands:
           - autoreconf -fiv
+    cleanup:
+      - /share/aclocal
 
   - name: aom
     buildsystem: cmake-ninja
@@ -159,12 +152,9 @@ modules:
       - type: git
         disable-shallow-clone: true
         url: https://aomedia.googlesource.com/aom
-        # tag: 'v1.0.0'
         commit: e33e1243bd0ea470a60ac43a0125321d019259f3
     cleanup:
       - /bin
-    #   - /lib/*.a
-    #   - /lib/pkgconfig
 
   - name: libass
     config-opts:
@@ -180,10 +170,6 @@ modules:
         dest-filename: autogen.sh
         commands:
           - autoreconf -fiv
-    # cleanup:
-    #   - /lib/*.a
-    #   - /lib/*.la
-    #   - /lib/pkgconfig
 
   - name: zimg
     config-opts:
@@ -192,22 +178,36 @@ modules:
       - type: archive
         url: https://github.com/sekrit-twc/zimg/archive/release-2.8.tar.gz
         sha256: a8f9d65c95ce6e8050d83d0417b109aabc94d2c7ba65cf2d8039840d162ad876
-    # cleanup:
-    #   - /lib/pkgconfig
-    #   - /lib/*.la
-    #   - /share
+
+  - name: vorbis
+    config-opts:
+      - --disable-static
+      - --disable-docs
+      - --disable-examples
+      - --disable-oggtest
+      - --with-pic
+    sources:
+      - type: archive
+        url: http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
+        sha256: af00bb5a784e7c9e69f56823de4637c350643deedaf333d0fa86ecdba6fcb415
 
   - name: ffnvcodec
-    buildsystem: simple
-    build-commands:
-      - make
-      - make install PREFIX=/app
+    no-autogen: true
+    make-install-args: [PREFIX=/app]
     sources:
       - type: archive
         url: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.5/nv-codec-headers-8.2.15.5.tar.gz
         sha256: 470aebb9bdbfe54aec4ec6c717b5a31c4ddc4bd04f631f46a86c22b8ea22003d
-    # cleanup:
-    #   - /lib/pkgconfig
+
+  - name: opencl
+    buildsystem: simple
+    build-commands:
+      - install -d /app/include/CL
+      - install -Dm644 CL/* /app/include/CL
+    sources:
+      - type: git
+        url: https://github.com/KhronosGroup/OpenCL-Headers.git
+        commit: 03490c3f8cb3b8667942b084a3151de20649f57a
 
   - name: ffmpeg
     config-opts:
@@ -242,22 +242,18 @@ modules:
       - --enable-libx265
       - --enable-nonfree
       - --enable-libzimg
+      - --enable-opencl
+    modules:
+      - name: appdata
+        buildsystem: simple
+        build-commands:
+          - install -Dm644 org.ffmpeg.FFmpeg.appdata.xml /app/share/appdata/org.ffmpeg.FFmpeg.appdata.xml
+        sources:
+          - type: file
+            path: org.ffmpeg.FFmpeg.appdata.xml
     sources:
       - type: archive
         url: http://ffmpeg.org/releases/ffmpeg-4.1.tar.xz
         sha256: a38ec4d026efb58506a99ad5cd23d5a9793b4bf415f2c4c2e9c1bb444acd1994
-    # cleanup:
-    #   - /lib/pkgconfig
-    #   - /share
-
-  - name: appdata
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 org.ffmpeg.FFmpeg.appdata.xml /app/share/appdata/org.ffmpeg.FFmpeg.appdata.xml
-    sources:
-      - type: file
-        path: org.ffmpeg.FFmpeg.appdata.xml
-
-# Include OpenCL
-# Include Vorbis
-# Include libavs2
+    cleanup:
+      - /share/ffmpeg
