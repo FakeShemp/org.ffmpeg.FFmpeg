@@ -7,12 +7,6 @@ finish-args:
   - --filesystem=host
   - --share=network
   - --env=LD_LIBRARY_PATH=/app/lib
-build-options:
-  cflags: -O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2
-  cxxflags: -O2 -g -fstack-protector-strong -D_FORTIFY_SOURCE=2
-  ldflags: -fstack-protector-strong -Wl,-z,relro,-z,now
-  env:
-    V: '1'
 cleanup:
   - /include
   - /lib/pkgconfig
@@ -20,7 +14,6 @@ cleanup:
   - /lib/*.la
   - /share/doc
   - /share/man
-
 modules:
   - name: 'x264'
     config-opts:
