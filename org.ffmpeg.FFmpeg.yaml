@@ -23,8 +23,8 @@ modules:
       - --bit-depth=10
     sources:
       - type: archive
-        url: http://download.videolan.org/x264/snapshots/x264-snapshot-20181119-2245-stable.tar.bz2
-        sha256: 359ad1fe388b2d1108789af6bdec54b8e53e340e3e5f078f973dd310bdfc44f6
+        url: http://download.videolan.org/x264/snapshots/x264-snapshot-20190805-2245-stable.tar.bz2
+        sha256: e7c6c13a15277d23cddf9df2b214fdf73a26aa19d16e26630eb1b3016aaa4db3
 
   - name: 'x265'
     buildsystem: cmake-ninja
@@ -49,8 +49,8 @@ modules:
           - /bin
     sources:
       - type: archive
-        url: https://bitbucket.org/multicoreware/x265/downloads/x265_3.0.tar.gz
-        sha256: c5b9fc260cabbc4a81561a448f4ce9cad7218272b4011feabc3a6b751b2f0662
+        url: https://bitbucket.org/multicoreware/x265/downloads/x265_3.1.2.tar.gz
+        sha256: 6f785f1c9a42e00a56402da88463bb861c49d9af108be53eb3ef10295f2a59aa
     cleanup:
       - /bin
 
@@ -73,8 +73,8 @@ modules:
           - /bin
     sources:
       - type: archive
-        url: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
-        sha256: 1fec931eb5c94279ad219a5b6e0202358e94a93a90cfb1603578c326abfc1238
+        url: https://github.com/webmproject/libvpx/archive/v1.8.1.tar.gz
+        sha256: df19b8f24758e90640e1ab228ab4a4676ec3df19d23e4593375e6f3847dee03e
 
   - name: fdk-aac
     config-opts:
@@ -89,46 +89,6 @@ modules:
         commands:
           - autoreconf -fiv
 
-  - name: lame
-    rm-configure: true
-    config-opts:
-      - --enable-shared
-      - --disable-static
-      - --enable-nasm
-      - --with-pic
-    sources:
-      - type: archive
-        url: https://sourceforge.net/projects/lame/files/lame/3.100/lame-3.100.tar.gz
-        sha256: ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e
-      - type: script
-        dest-filename: autogen.sh
-        commands:
-          - autoreconf -fiv
-      - type: patch
-        path: patches/lame-tinfo.patch
-        strip-components: 0
-      - type: patch
-        path: patches/lame-msse.patch
-    cleanup:
-      - /bin
-
-  - name: opus
-    config-opts:
-      - --disable-static
-      - --disable-doc
-      - --disable-extra-programs
-      - --enable-custom-modes
-    sources:
-      - type: archive
-        url: https://archive.mozilla.org/pub/opus/opus-1.3.tar.gz
-        sha256: 4f3d69aefdf2dbaf9825408e452a8a414ffc60494c70633560700398820dc550
-      - type: script
-        dest-filename: autogen.sh
-        commands:
-          - autoreconf -fiv
-    cleanup:
-      - /share/aclocal
-
   - name: aom
     buildsystem: cmake-ninja
     builddir: true
@@ -141,7 +101,8 @@ modules:
       - type: git
         disable-shallow-clone: true
         url: https://aomedia.googlesource.com/aom
-        commit: e43f7feb3e6455a77121b051cdde7d8a44a57ea8
+        tag: v1.0.0-errata1
+        commit: add4b15580e410c00c927ee366fa65545045a5d9
     cleanup:
       - /bin
 
@@ -160,35 +121,70 @@ modules:
         commands:
           - autoreconf -fiv
 
+  - name: libdrm
+    buildsystem: meson
+    config-opts:
+      - -Dudev=false 
+      - -Dvalgrind=false
+    sources:
+      - type: archive
+        url: https://dri.freedesktop.org/libdrm/libdrm-2.4.99.tar.bz2
+        sha512: 04702eebe8dca97fac61653623804fdcb0b8b3714bdc6f5e72f0dfdce9c9524cf16f69d37aa9feac79ddc1c11939be44a216484563a612414668ea5eaeadf191
+    cleanup:
+      - /bin
+
+  - name: openh264
+    buildsystem: meson
+    modules:
+      - name: gtest
+        buildsystem: cmake-ninja
+        config-opts:
+          - -DBUILD_SHARED_LIBS=ON 
+          - -Dgtest_build_tests=OFF
+          - -DCMAKE_BUILD_TYPE=Release
+        sources:
+          - type: archive
+            url: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
+            sha512: e6283c667558e1fd6e49fa96e52af0e415a3c8037afe1d28b7ff1ec4c2ef8f49beb70a9327b7fc77eb4052a58c4ccad8b5260ec90e4bceeac7a46ff59c4369d7
+    sources:
+      - type: archive
+        url: https://github.com/cisco/openh264/archive/v2.0.0.tar.gz
+        sha256: 73c35f80cc487560d11ecabb6d31ad828bd2f59d412f9cd726cc26bfaf4561fd
+
+  - name: kvazaar
+    config-opts:
+      - --disable-static
+    sources:
+      - type: archive
+        url: https://github.com/ultravideo/kvazaar/releases/download/v1.3.0/kvazaar-1.3.0.tar.xz
+        sha256: 8916bd616539e0ac7b0b4320190b37d7bf7223299bdd7e545f52eb79a949e26d
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -fiv
+
+  - name: dav1d
+    buildsystem: meson
+    sources:
+      - type: archive
+        url: http://downloads.videolan.org/pub/videolan/dav1d/0.4.0/dav1d-0.4.0.tar.xz
+        sha256: 2553b2e65081c0ec799c11a752ea43ad8f2d11b2fb36a83375972d1a00add823
+
   - name: zimg
     config-opts:
       - --disable-static
     sources:
       - type: archive
-        url: https://github.com/sekrit-twc/zimg/archive/release-2.8.tar.gz
-        sha256: a8f9d65c95ce6e8050d83d0417b109aabc94d2c7ba65cf2d8039840d162ad876
-
-  - name: vorbis
-    config-opts:
-      - --disable-static
-      - --disable-docs
-      - --disable-examples
-      - --disable-oggtest
-      - --with-pic
-    sources:
-      - type: archive
-        url: http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz
-        sha256: af00bb5a784e7c9e69f56823de4637c350643deedaf333d0fa86ecdba6fcb415
-    cleanup:
-      - /share/aclocal
+        url: https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz
+        sha256: 10403c2964fe11b559a7ec5e081c358348fb787e26b91ec0d1f9dd7c01d1cd7b
 
   - name: ffnvcodec
     no-autogen: true
     make-install-args: [PREFIX=/app]
     sources:
       - type: archive
-        url: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.6/nv-codec-headers-8.2.15.6.tar.gz
-        sha256: 10ec7fc39ccffc08561e751a626ca2b90dfdf1a25f9dc868831fab3462629569
+        url: https://github.com/FFmpeg/nv-codec-headers/releases/download/n9.0.18.1/nv-codec-headers-9.0.18.1.tar.gz
+        sha256: 6181a5dac66a6990aa3baf10a77ae677f372b9068be9ef73abfd37b73fb4c745
 
   - name: opencl
     buildsystem: simple
@@ -198,7 +194,6 @@ modules:
     sources:
       - type: git
         url: https://github.com/KhronosGroup/OpenCL-Headers.git
-        commit: 03490c3f8cb3b8667942b084a3151de20649f57a
 
   - name: ffmpeg
     config-opts:
@@ -210,6 +205,10 @@ modules:
       - --enable-gpl
       - --enable-optimizations
       - --enable-libaom
+      - --enable-libdrm
+      - --enable-libdav1d
+      - --enable-libopenh264
+      - --enable-libkvazaar
       - --enable-libass
       - --enable-libfdk-aac
       - --enable-gnutls
@@ -244,7 +243,7 @@ modules:
             path: org.ffmpeg.FFmpeg.appdata.xml
     sources:
       - type: archive
-        url: http://ffmpeg.org/releases/ffmpeg-4.1.tar.xz
-        sha256: a38ec4d026efb58506a99ad5cd23d5a9793b4bf415f2c4c2e9c1bb444acd1994
+        url: https://ffmpeg.org/releases/ffmpeg-4.2.tar.xz
+        sha256: 023f10831a97ad93d798f53a3640e55cd564abfeba807ecbe8524dac4fedecd5
     cleanup:
       - /share/ffmpeg
