@@ -23,8 +23,8 @@ modules:
       - --bit-depth=10
     sources:
       - type: archive
-        url: http://download.videolan.org/x264/snapshots/x264-snapshot-20190805-2245-stable.tar.bz2
-        sha256: e7c6c13a15277d23cddf9df2b214fdf73a26aa19d16e26630eb1b3016aaa4db3
+        url: http://download.videolan.org/x264/snapshots/x264-snapshot-20191217-2245-stable.tar.bz2
+        sha256: b2495c8f2930167d470994b1ce02b0f4bfb24b3317ba36ba7f112e9809264160
 
   - name: 'x265'
     buildsystem: cmake-ninja
@@ -43,14 +43,14 @@ modules:
           - --enable-shared
         sources:
           - type: archive
-            url: https://github.com/numactl/numactl/archive/v2.0.12.tar.gz
-            sha256: 7c3e819c2bdeb883de68bafe88776a01356f7ef565e75ba866c4b49a087c6bdf
+            url: https://github.com/numactl/numactl/releases/download/v2.0.13/numactl-2.0.13.tar.gz
+            sha256: 991e254b867eb5951a44d2ae0bf1996a8ef0209e026911ef6c3ef4caf6f58c9a
         cleanup:
           - /bin
     sources:
       - type: archive
-        url: https://bitbucket.org/multicoreware/x265/downloads/x265_3.1.2.tar.gz
-        sha256: 6f785f1c9a42e00a56402da88463bb861c49d9af108be53eb3ef10295f2a59aa
+        url: https://bitbucket.org/multicoreware/x265/downloads/x265_3.3.tar.gz
+        sha256: f26e148ed1f4dfb33fd1eb3ff5e60e08078d1b2017e88bcbb045b3fb58300b9c
     cleanup:
       - /bin
 
@@ -73,8 +73,8 @@ modules:
           - /bin
     sources:
       - type: archive
-        url: https://github.com/webmproject/libvpx/archive/v1.8.1.tar.gz
-        sha256: df19b8f24758e90640e1ab228ab4a4676ec3df19d23e4593375e6f3847dee03e
+        url: https://github.com/webmproject/libvpx/archive/v1.8.2.tar.gz
+        sha256: 8735d9fcd1a781ae6917f28f239a8aa358ce4864ba113ea18af4bb2dc8b474ac
 
   - name: fdk-aac
     config-opts:
@@ -82,8 +82,9 @@ modules:
       - --disable-static
     sources:
       - type: archive
-        url: https://github.com/mstorsjo/fdk-aac/archive/v2.0.0.tar.gz
-        sha256: 6e6c7921713788e31df655911e1d42620b057180b00bf16874f5d630e1d5b9a2
+        url: https://github.com/mstorsjo/fdk-aac/archive/v2.0.1.tar.gz
+        sha256: a4142815d8d52d0e798212a5adea54ecf42bcd4eec8092b37a8cb615ace91dc6
+
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -101,8 +102,8 @@ modules:
       - type: git
         disable-shallow-clone: true
         url: https://aomedia.googlesource.com/aom
-        tag: v1.0.0-errata1
-        commit: add4b15580e410c00c927ee366fa65545045a5d9
+        tag: v1.0.0-errata1-avif
+        commit: 4eb1e7795b9700d532af38a2d9489458a8038233
     cleanup:
       - /bin
 
@@ -128,8 +129,8 @@ modules:
       - -Dvalgrind=false
     sources:
       - type: archive
-        url: https://dri.freedesktop.org/libdrm/libdrm-2.4.99.tar.bz2
-        sha512: 04702eebe8dca97fac61653623804fdcb0b8b3714bdc6f5e72f0dfdce9c9524cf16f69d37aa9feac79ddc1c11939be44a216484563a612414668ea5eaeadf191
+        url: https://dri.freedesktop.org/libdrm/libdrm-2.4.100.tar.bz2
+        sha256: c77cc828186c9ceec3e56ae202b43ee99eb932b4a87255038a80e8a1060d0a5d
     cleanup:
       - /bin
 
@@ -144,8 +145,8 @@ modules:
           - -DCMAKE_BUILD_TYPE=Release
         sources:
           - type: archive
-            url: https://github.com/google/googletest/archive/release-1.8.1.tar.gz
-            sha512: e6283c667558e1fd6e49fa96e52af0e415a3c8037afe1d28b7ff1ec4c2ef8f49beb70a9327b7fc77eb4052a58c4ccad8b5260ec90e4bceeac7a46ff59c4369d7
+            url: https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+            sha256: 9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb
     sources:
       - type: archive
         url: https://github.com/cisco/openh264/archive/v2.0.0.tar.gz
@@ -167,24 +168,24 @@ modules:
     buildsystem: meson
     sources:
       - type: archive
-        url: http://downloads.videolan.org/pub/videolan/dav1d/0.4.0/dav1d-0.4.0.tar.xz
-        sha256: 2553b2e65081c0ec799c11a752ea43ad8f2d11b2fb36a83375972d1a00add823
+        url: http://downloads.videolan.org/pub/videolan/dav1d/0.5.2/dav1d-0.5.2.tar.xz
+        sha256: f94cf88c4a3ac2fd3cb30d688e8ef5943854d73db2dd12985a78892e76560f0a
 
   - name: zimg
     config-opts:
       - --disable-static
     sources:
       - type: archive
-        url: https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz
-        sha256: 10403c2964fe11b559a7ec5e081c358348fb787e26b91ec0d1f9dd7c01d1cd7b
+        url: https://github.com/sekrit-twc/zimg/archive/release-2.9.3.tar.gz
+        sha256: a15c0483fbe945ffe695a1a989bc43b3381c8bf33e2d1760464ec21d32cdf30b
 
   - name: ffnvcodec
     no-autogen: true
     make-install-args: [PREFIX=/app]
     sources:
       - type: archive
-        url: https://github.com/FFmpeg/nv-codec-headers/releases/download/n9.0.18.1/nv-codec-headers-9.0.18.1.tar.gz
-        sha256: 6181a5dac66a6990aa3baf10a77ae677f372b9068be9ef73abfd37b73fb4c745
+        url: https://github.com/FFmpeg/nv-codec-headers/archive/n9.1.23.1.tar.gz
+        sha256: 063f49838113c90504fd430377a6025478e2a454f812ce8a4da033e474727dc8
 
   - name: opencl
     buildsystem: simple
@@ -197,12 +198,16 @@ modules:
 
   - name: ffmpeg
     config-opts:
+      - --pkg-config-flags=--static
+      - --extra-cflags=-I/usr/local/include
+      - --extra-ldflags='-L/usr/local/lib -L/usr/local/lib64 -flto -fuse-linker-plugin' --ar=gcc-ar --extra-libs='-lpthread -lm'
       - --disable-debug
       - --disable-doc
-      - --disable-ffplay
-      - --disable-ffprobe
       - --enable-pic
       - --enable-gpl
+      - --enable-version3
+      - --enable-nonfree
+      - --disable-podpages
       - --enable-optimizations
       - --enable-libaom
       - --enable-libdrm
@@ -243,7 +248,7 @@ modules:
             path: org.ffmpeg.FFmpeg.appdata.xml
     sources:
       - type: archive
-        url: https://ffmpeg.org/releases/ffmpeg-4.2.tar.xz
-        sha256: 023f10831a97ad93d798f53a3640e55cd564abfeba807ecbe8524dac4fedecd5
+        url: https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.xz
+        sha256: cb754255ab0ee2ea5f66f8850e1bd6ad5cac1cd855d0a2f4990fb8c668b0d29c
     cleanup:
       - /share/ffmpeg
