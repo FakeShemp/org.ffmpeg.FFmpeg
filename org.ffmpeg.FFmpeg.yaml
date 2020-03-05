@@ -199,8 +199,7 @@ modules:
   - name: ffmpeg
     config-opts:
       - --pkg-config-flags=--static
-      - --extra-cflags=-I/usr/local/include
-      - --extra-ldflags='-L/usr/local/lib -L/usr/local/lib64 -flto -fuse-linker-plugin' --ar=gcc-ar --extra-libs='-lpthread -lm'
+      - --enable-hardcoded-tables
       - --disable-debug
       - --disable-doc
       - --enable-pic
